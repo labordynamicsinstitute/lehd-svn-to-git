@@ -160,10 +160,21 @@ do
   git tag -a -m "$PROCESS release $vnum" $vnum
   rm *
 done
+# finalize with any unreleased trunk code
+svn export $SVNURL/trunk/$PROCESS
+git add *
+git commit -m "Last trunk for $PROCESS on SVN" -a
+
 ```
 followed by a push to the official LEHD Git server.
 
-#### Historical Archive
+Branches will need to follow a manual process if in active use (inactive branches, see "Historical Archive").
+
+- Apply the appropriate development strategy (see above)
+- (Optional) Replay the branches' SVN history on top of the fork/branch (`for history in (commits); do svn export; git add *; git commit; done` similar to above TO BE REFINED)
+- Export the last known state of the branch on top of the fork/branch, commit. 
+
+### Historical Archive
 The current SVN repository should be frozen (read-only access). Options for maintenance are two-fold:
 
 - continue maintaining a SVN repo (Apache + SVN or other), allowing for sparse storage of the entire history (15,000+ commits) of the repository. This should also work seamlessly in order to maintain a transitional copy of `Redmine`.
